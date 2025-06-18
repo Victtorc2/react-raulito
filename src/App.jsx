@@ -1,35 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import MainLayout from './components/MainLayout';
+import Login from './components/Login';
+import ProtectedRoute from './utils/ProtectedRoute';
+import { AuthProvider } from './context/AuthContext';
+import Inicio from './components/inicio/Inicio';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <AuthProvider>
+      <Router>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<Login />} />
+          
+          {/* Ruta principal protegida */}
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN', 'EMPLEADO']} />}>
+            <Route element={<MainLayout />}>
+              <Route path="/inicio" element={<Inicio />} />
+              <Route path="/inventario" element={<div>Inventario</div>} />
+              <Route path="/ventas" element={<div>Ventas</div>} />
+            </Route>
+          </Route>
 
-export default App
+          {/* Rutas de admin */}
+          <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>
+            <Route element={<MainLayout />}>
+              <Route path="/admin/productos" element={<div>Productos</div>} />
+              <Route path="/admin/usuarios" element={<div>Usuarios</div>} />
+              <Route path="/admin/auditoria" element={<div>Auditoría</div>} />
+              <Route path="/admin/reportes" element={<div>Reportes</div>} />
+            </Route>
+          </Route>
+
+          <Route path="*" element={<Navigate to="/inicio" replace />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+};
+
+export default App;

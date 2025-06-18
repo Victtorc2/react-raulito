@@ -1,0 +1,31 @@
+.inicio-container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.titulo {
+  text-align: center;
+  font-size: 36px;
+  margin-bottom: 20px;
+}
+
+.ventas-header {
+  margin-bottom: 20px;
+}
+
+.descripcion {
+  font-size: 16px;
+  color: #555;
+}
+
+.ventas-lista {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.acciones-footer {
+  margin-top: 20px;
+  text-align: center;
+}
